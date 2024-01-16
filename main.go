@@ -6,6 +6,7 @@ import (
 )
 
 func main() {
+	fmt.Println(time.Now())
 	fmt.Println("Start of month: ", StartOfMonth(time.Now()))
 	fmt.Println("End of month: ", EndOfMonth(time.Now()))
 	fmt.Println("Start of day of week: ", StartOfDayOfWeek(time.Now()))
@@ -16,11 +17,12 @@ func main() {
 	fmt.Println("End of year: ", EndOfYear(time.Now()))
 	fmt.Println("Start of quarter: ", StartOfQuarter(time.Now()))
 	fmt.Println("End of quarter: ", EndOfQuarter(time.Now()))
-	start, end := CurrentWeekRange(time.Now().Location())
+	start, end := CurrentWeekRange("America/New_York")
 	fmt.Println("Start: ", start, " and End: ", end, " of current week")
 	fmt.Println("Duration between: ", DurationBetween(time.Now(), time.Now().AddDate(0, 0, 7)))
 	date, _ := ParseDateStringWithFormat("25-Jan-2022", "02-Jan-2006")
 	fmt.Println("Date with format: ", date)
+	fmt.Println("Get dates for sunday of january: ", GetDatesForDayOfWeek(2024, 1, time.Sunday))
 	fmt.Println("Business days: ", AddBusinessDays(time.Now(), 50))
 	fmt.Println("Format duration: ", FormatDuration(time.Hour*24*3+time.Hour*4+time.Minute*15+time.Second*30))
 
@@ -99,8 +101,12 @@ func EndOfQuarter(date time.Time) time.Time {
 	return startOfNextQuarter.Add(-time.Second)
 }
 
-func CurrentWeekRange(timeZone *time.Location) (startOfWeek, endOfWeek time.Time) {
-	now := time.Now().In(timeZone)
+func CurrentWeekRange(timeZone string) (startOfWeek, endOfWeek time.Time) {
+	loc := time.Now().Location()
+	if timeZone != "" {
+		loc, _ = time.LoadLocation(timeZone)
+	}
+	now := time.Now().In(loc)
 	startOfWeek = StartOfDayOfWeek(now)
 	endOfWeek = EndOfDayOfWeek(now)
 	return startOfWeek, endOfWeek
@@ -116,6 +122,25 @@ func ParseDateStringWithFormat(dateString, format string) (time.Time, error) {
 		return time.Time{}, err
 	}
 	return parsedTime, nil
+}
+
+func GetDatesForDayOfWeek(year, month int, day time.Weekday) []time.Time {
+	var dates []time.Time
+
+	firstDayOfMonth := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.UTC)
+
+	diff := int(day) - int(firstDayOfMonth.Weekday())
+	if diff < 0 {
+		diff += 7
+	}
+
+	firstDay := firstDayOfMonth.AddDate(0, 0, diff)
+
+	for current := firstDay; current.Month() == time.Month(month); current = current.AddDate(0, 0, 7) {
+		dates = append(dates, current)
+	}
+
+	return dates
 }
 
 func AddBusinessDays(startDate time.Time, daysToAdd int) time.Time {
