@@ -4,7 +4,7 @@
 
 Date time utility functions serve as a valuable extension to the standard time package in Go
 
-<img src="https://github.com/cp-dharti-r/tdd-in-golang-with-gin-and-mysql/blob/main/img/cover-img.png">
+<img src="https://github.com/cp-dharti-r/golang-date-time-utils/blob/main/img/cover-img.png">
 <br />
 
 In this repository, we've covered the implementation of advanced date-time utilities functions.
