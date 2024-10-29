@@ -4,7 +4,9 @@
 
 Date time utility functions serve as a valuable extension to the standard time package in Go
 
+<a href="https://canopas.com/golang-date-time-utilities-part-2-b1192eb04842">
 <img src="https://github.com/cp-dharti-r/golang-date-time-utils/blob/main/img/cover-img.png">
+</a>
 <br />
 
 In this repository, we've covered the implementation of advanced date-time utilities functions.
